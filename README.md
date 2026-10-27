@@ -1,7 +1,7 @@
 # Relay
 
 A webhook delivery platform built incrementally for backend and infrastructure practice.
-**Current scope: Phase 7c.** GitHub Actions is configured for full backend tests, a frontend build and real Chromium journeys; hosted Linux/Docker execution remains unverified. Structured correlation logs, operator-protected metrics, minimal health/readiness probes, graceful worker shutdown and the customer dashboard are available. See [CI jobs and verification limits](docs/CI.md), [observability and operator setup](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use and browser tests](docs/DASHBOARD.md). Load measurements and final deployment verification remain later Phase 7 work.
+**Current scope: Phase 7c, verified.** [Hosted GitHub Actions passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40519589217) on Ubuntu with Docker: 159 backend tests, the frontend build and both real Chromium journeys. Structured correlation logs, operator-protected metrics, minimal health/readiness probes, graceful worker shutdown and the customer dashboard are available. See [CI jobs and verification limits](docs/CI.md), [observability and operator setup](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use and browser tests](docs/DASHBOARD.md). Load measurements and final deployment verification remain later Phase 7 work.
 
 ## Prerequisites and pinned versions
 

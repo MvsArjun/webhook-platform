@@ -2,7 +2,7 @@
 
 `.github/workflows/ci.yml` defines two independent GitHub Actions jobs for pushes, pull requests and manual runs. Both jobs must succeed. There are no deployment steps or production credentials.
 
-**Verification status:** workflow syntax and underlying application checks can be verified locally. A successful GitHub-hosted Linux/Docker run is still required before calling hosted CI verified. This working copy has no Git metadata/remote, Docker is unavailable, and WSL is not installed; no repository was published or workflow dispatched from this environment. See `PROGRESS.md` for the exact checks actually run.
+**Verification status: passed on GitHub-hosted Ubuntu/Docker.** The private repository is [MvsArjun/webhook-platform](https://github.com/MvsArjun/webhook-platform). Its [first hosted run](https://github.com/MvsArjun/webhook-platform/actions/runs/40519589217), on commit `27770b0e1409d9908bac6e26e4120dbd954733b4`, completed successfully on **2026-10-27 at 19:50:06 Asia/Calcutta**. Backend logs confirm **70 unit + 89 PostgreSQL integration tests, zero failures/errors/skips** with the default Testcontainers path. The dashboard job passed fresh install (zero audit vulnerabilities), build, Linux Chromium/library setup and both real browser journeys. The imported 173 files were verified against the reviewed source by Git blob hash before publication. Local Windows checks also passed; Docker/Compose and WSL remain unavailable locally. See `PROGRESS.md` for scope and limitations.
 
 ## Jobs and boundaries
 
@@ -41,7 +41,7 @@ Backend test assertions can include synthetic credentials on failure. Maven test
 
 Each job has a 25-minute limit, with narrower backend/browser test limits. New runs cancel older runs for the same workflow/event/pull request or branch. The harness attempts owned-process and fixture cleanup on normal exit and handled signals; hard cancellation can bypass it. Disposable hosted VMs/service containers limit state lifetime. CI is validation only and makes no deployment, delivery reliability or performance claim.
 
-## Reproduce and verify the first hosted run
+## Reproduce and inspect hosted runs
 
 Use the [README validation commands](../README.md#validation) and [browser-test instructions](DASHBOARD.md#browser-tests) with dedicated databases for local checks. On Docker-capable Linux, the backend command from `backend/` is:
 
@@ -56,7 +56,7 @@ With a separately installed, checksum-verified actionlint 1.7.12, validate from 
 actionlint -shellcheck= -pyflakes= .github/workflows/ci.yml
 ```
 
-When this source is placed in the intended GitHub repository, retain `.github/` at the repository root and enable GitHub Actions. A push or pull request runs CI; manual dispatch is available once the workflow is on the default branch. No production secrets need configuring. Inspect the first run for both named jobs, nonzero unit/integration summaries, both browser journeys and a successful overall conclusion. Repository branch protection/required checks are separate repository settings and were not configured here. Do not advertise a passing badge until an actual hosted run succeeds.
+The workflow is on `main` in the private repository linked above. A push or pull request runs CI; manual dispatch is available from Actions. No production secrets need configuring. For every revision, inspect both named jobs, nonzero unit/integration summaries, both browser journeys and the overall conclusion. A green result belongs to the commit actually checked, not all future revisions. Repository branch protection/required-check settings are separate repository settings and were not configured here. The local working directory remains a file copy without Git metadata; publishing used the connected GitHub API rather than importing unrelated local history.
 
 Load/failure measurements, final startup/deployment guidance and final project verification remain later Phase 7 work.
 
