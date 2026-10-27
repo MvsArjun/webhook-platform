@@ -1,4 +1,4 @@
-# Continuous integration — Phase 7c
+# Continuous integration — Phase 7d1
 
 `.github/workflows/ci.yml` defines two independent GitHub Actions jobs for pushes, pull requests and manual runs. Both jobs must succeed. There are no deployment steps or production credentials.
 
@@ -9,7 +9,7 @@
 | Job | Checks |
 | --- | --- |
 | Backend and workflow checks | Checksummed actionlint validates the workflow; Docker preflight; the Maven wrapper runs `clean verify`, including unit tests, real PostgreSQL integration tests and packaged-worker/receiver process tests |
-| Dashboard build and Chromium journeys | Packages the current backend; fresh `npm ci`; TypeScript/production build; installs the pinned Chromium plus Linux libraries; runs both existing real browser journeys against the API, separate worker and controllable receiver |
+| Dashboard build and Chromium journeys | Packages the current backend; fresh `npm ci`; TypeScript/production build; benchmark guard/calculation/receiver checks; installs the pinned Chromium plus Linux libraries; runs both existing real browser journeys against the API, separate worker and controllable receiver |
 
 Both jobs use a host `ubuntu-24.04` VM, full Temurin JDK **21.0.12.1+1**, and the repository's checksum-verified Maven **3.9.16** wrapper. The dashboard uses `.node-version` (**22.23.4**) and checks bundled npm **10.9.9**. Frontend packages and Playwright **1.64.1** remain fixed by `package-lock.json`; the installed Playwright CLI selects its matching Chromium. No globally installed Playwright is used.
 
@@ -23,7 +23,7 @@ The dashboard job gets a separate disposable `postgres:17.11-bookworm` service. 
 
 The existing harness validates the database before claiming cleanup ownership, generates temporary signing/control secrets, allocates application ports and starts/stops API, worker, preview and receiver itself. CI does not prestart competing application processes. Linux installation includes Chromium's system libraries via `install --with-deps chromium`; the browser cache path matches the harness. Playwright rejects focused `.only` tests when `CI` is set, preventing an accidental partial browser run. See [browser behavior and setup](DASHBOARD.md#browser-tests).
 
-The dashboard's Maven packaging step deliberately skips tests because its purpose is to supply that job's current JAR. It cannot replace the independent full backend job. No JAR or application state is passed between jobs.
+The dashboard's Maven packaging step deliberately skips tests because its purpose is to supply that job's current JAR. It cannot replace the independent full backend job. No JAR or application state is passed between jobs. Phase 7d1 adds fast benchmark safety/statistics/receiver checks; the hardware-dependent load measurement itself runs manually and is not a CI performance threshold.
 
 ## Workflow access, logs and limits
 
@@ -58,6 +58,6 @@ actionlint -shellcheck= -pyflakes= .github/workflows/ci.yml
 
 The workflow is on `main` in the private repository linked above. A push or pull request runs CI; manual dispatch is available from Actions. No production secrets need configuring. For every revision, inspect both named jobs, nonzero unit/integration summaries, both browser journeys and the overall conclusion. A green result belongs to the commit actually checked, not all future revisions. Repository branch protection/required-check settings are separate repository settings and were not configured here. The local working directory remains a file copy without Git metadata; publishing used the connected GitHub API rather than importing unrelated local history.
 
-Load/failure measurements, final startup/deployment guidance and final project verification remain later Phase 7 work.
+Phase 7d1 adds `npm run test:bench` to the dashboard job: 16 guard, calculation and receiver tests. The actual [load benchmark and retained measurements](LOAD_TESTING.md) run manually on explicitly recorded hardware; CI does not run a hardware-dependent performance threshold. Destination/worker failure demonstrations, final startup/deployment guidance and final project verification remain later Phase 7 work.
 
 Primary references: [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax), [secure workflow use](https://docs.github.com/en/actions/reference/security/secure-use), [service containers](https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers), [Playwright CI installation](https://playwright.dev/docs/ci-intro), [actionlint 1.7.12](https://github.com/rhysd/actionlint/releases/tag/v1.7.12). Action pins were checked against the official [checkout release](https://github.com/actions/checkout/releases/tag/v7.0.1), [Java setup release](https://github.com/actions/setup-java/releases/tag/v6.1.0) and [Node setup release](https://github.com/actions/setup-node/releases/tag/v7.1.0) on 2026-10-27.

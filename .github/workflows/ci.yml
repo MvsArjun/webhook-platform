@@ -135,6 +135,10 @@ jobs:
         working-directory: frontend
         run: npm run build
 
+      - name: Check benchmark guards and measurements
+        working-directory: frontend
+        run: npm run test:bench
+
       - name: Install pinned Chromium and Linux libraries
         working-directory: frontend
         run: node node_modules/playwright/cli.js install --with-deps chromium

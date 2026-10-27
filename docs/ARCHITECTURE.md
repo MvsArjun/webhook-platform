@@ -1,4 +1,4 @@
-# Architecture — Phase 7c
+# Architecture — Phase 7d1
 
 ## Shape and modules
 
@@ -92,5 +92,7 @@ An independent, default-disabled operator bearer credential permits only GET Pro
 
 Phase 7c adds two independent GitHub Actions jobs: full backend verification using Testcontainers, and dashboard compilation/browser journeys using a separate disposable PostgreSQL service. Actions/toolchains are pinned; credentials and state are test-only, checkout access is read-only, and raw test reports/captures are not uploaded. Both jobs passed on hosted Ubuntu/Docker; the local Windows environment still has no Docker/Compose installation. See [CI evidence and validation boundaries](CI.md).
 
-Later Phase 7 subphases measure a stated workload on stated hardware and finish deployment guidance and final verification. The status route remains a local connectivity check and its phase 7 value does not imply all Phase 7 work is complete.
+Phase 7d1 adds a bounded Node harness around the packaged API, separate worker, dedicated PostgreSQL database and independent verifying receiver. It bootstraps real API credentials, compares accepted IDs to committed ledger rows and signed receipts, records monotonic client/drain timings separately from stored SQL timestamps, and removes owned fixtures. Three 1,000-event batches on the stated shared host completed successfully; observed drain varied from 28.2 to 63.8 events/s. See [workload, measurement definitions, hardware and results](LOAD_TESTING.md). Healthy observations do not establish sustainable capacity or fault behavior.
+
+Later Phase 7 subphases demonstrate destination/worker recovery and finish deployment guidance and final verification. The status route remains a local connectivity check and its phase 7 value does not imply all Phase 7 work is complete.
 

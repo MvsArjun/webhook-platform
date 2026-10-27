@@ -1,0 +1,479 @@
+{
+  "schemaVersion": 1,
+  "result": "success",
+  "startedAt": "2026-10-27T20:00:01.485Z",
+  "environment": {
+    "os": {
+      "platform": "win32",
+      "release": "10.0.26300",
+      "architecture": "x64"
+    },
+    "cpu": {
+      "model": "AMD Ryzen 5 6600H with Radeon Graphics         ",
+      "logicalCores": 12
+    },
+    "ramBytes": 16312721408,
+    "node": "22.23.4",
+    "java": {
+      "vendor": "Eclipse Temurin",
+      "version": "21.0.12.1",
+      "build": "21.0.12.1+1",
+      "fullJdk": true
+    },
+    "postgres": {
+      "version": "17.11",
+      "fsync": "on",
+      "synchronousCommit": "on",
+      "fullPageWrites": "on",
+      "maxConnections": 100,
+      "sharedBuffers": "128MB"
+    },
+    "jarSha256": "7501fd613883a50bfe23b689b966e261fb23624b297d54f90c6ecc57ca6f9465"
+  },
+  "settings": {
+    "events": 1000,
+    "iterations": 3,
+    "concurrency": 8,
+    "payloadBytes": 1024,
+    "warmup": 100,
+    "receiverDelayMs": 10,
+    "workerConcurrency": 4,
+    "workspaceConcurrency": 4,
+    "pollIntervalMs": 50,
+    "requestTimeoutMs": 5000,
+    "connectTimeoutMs": 2000,
+    "dnsTimeoutMs": 1000,
+    "leaseMs": 30000,
+    "leaseSafetyMs": 1000,
+    "maxAttempts": 5,
+    "responseCaptureBytes": 4096,
+    "batchDeadlineMs": 180000,
+    "observationIntervalMs": 100,
+    "hikariMaximumPoolSize": {
+      "api": 5,
+      "worker": 5
+    },
+    "postgresClient": {
+      "ssl": false,
+      "ambientPgOptionsIgnored": true
+    },
+    "jvm": {
+      "processes": 2,
+      "initialHeapMiB": 64,
+      "maximumHeapMiB": 256,
+      "gc": "G1"
+    },
+    "logging": {
+      "format": "ECS JSON",
+      "level": "INFO",
+      "sink": "discarded; worker fixed readiness line recognized in bounded buffers"
+    },
+    "metrics": {
+      "durableCollectorEnabled": false,
+      "allMetersEnabled": false
+    },
+    "limitations": [
+      "Single host; API, worker, client, receiver and PostgreSQL compete for resources.",
+      "Literal-loopback HTTP development exception; no TLS or external destination network.",
+      "Receiver delay is synthetic and receiver deduplication is memory-only.",
+      "Stored accepted_at is ingestion transaction start; finished_at is written before completion commit.",
+      "Client monotonic drain ends at aggregate committed-success plus receiver-completion observation; detailed row validation follows once.",
+      "Healthy-only workload; this run does not establish capacity, fault recovery or delivery guarantees."
+    ]
+  },
+  "warmup": {
+    "iteration": 0,
+    "status": "success",
+    "planned": 100,
+    "attempted": 100,
+    "accepted": 100,
+    "acceptance": {
+      "statusCounts": {
+        "202": 100
+      },
+      "clientErrors": 0,
+      "elapsedMs": 432.64419999998063,
+      "throughputPerSecond": 231.1368094152296,
+      "roundTripMs": {
+        "samples": 100,
+        "min": 10.485500000067987,
+        "mean": 33.92377099999809,
+        "p50": 31.683399999979883,
+        "p95": 63.07595499993185,
+        "p99": 78.45734599997292,
+        "max": 82.0555999999633
+      }
+    },
+    "drain": {
+      "elapsedFromFirstSendMs": 2289.717900000047,
+      "elapsedAfterLast202Ms": 1857.0737000000663,
+      "throughputPerSecond": 43.67350231222717
+    },
+    "ledger": {
+      "eventCount": 100,
+      "deliveryCount": 100,
+      "deliveryStates": {
+        "PENDING": 0,
+        "IN_FLIGHT": 0,
+        "RETRY_WAIT": 0,
+        "SUCCEEDED": 100,
+        "FAILED": 0
+      },
+      "attemptOutcomes": {
+        "IN_PROGRESS": 0,
+        "SUCCEEDED": 100,
+        "FAILED": 0,
+        "UNKNOWN": 0
+      },
+      "attemptCount": 100
+    },
+    "receiver": {
+      "requests": 100,
+      "signaturesVerified": 100,
+      "invalidSignatures": 0,
+      "invalidHeaders": 0,
+      "payloadMismatches": 0,
+      "duplicates": 0,
+      "responses204": 100,
+      "requestFailures": 0,
+      "postResponseResets": 100,
+      "connectionFailures": 0,
+      "peakInFlight": 4,
+      "socketError_ECONNRESET": 100,
+      "socketError_HPE_INVALID_EOF_STATE": 0,
+      "socketError_HPE_HEADER_OVERFLOW": 0,
+      "socketError_HPE_INVALID_CONSTANT": 0,
+      "socketError_ERR_HTTP_REQUEST_TIMEOUT": 0,
+      "socketError_OTHER": 0,
+      "uniqueEvents": 100
+    },
+    "storedAcceptedAtToFirstStartedAtMs": {
+      "samples": 100,
+      "min": 58.158,
+      "mean": 1169.46819,
+      "p50": 1195.8020000000001,
+      "p95": 1751.79845,
+      "p99": 1807.46916,
+      "max": 1808.673
+    },
+    "storedAcceptedAtToFinishedAtMs": {
+      "samples": 100,
+      "min": 613.751,
+      "mean": 1217.9597000000008,
+      "p50": 1223.4560000000001,
+      "p95": 1785.11975,
+      "p99": 1837.4381500000002,
+      "max": 1837.453
+    },
+    "persistedTransportDurationMs": {
+      "samples": 100,
+      "min": 14,
+      "mean": 38.36000000000002,
+      "p50": 21,
+      "p95": 29,
+      "p99": 460,
+      "max": 460
+    }
+  },
+  "batches": [
+    {
+      "iteration": 1,
+      "status": "success",
+      "planned": 1000,
+      "attempted": 1000,
+      "accepted": 1000,
+      "acceptance": {
+        "statusCounts": {
+          "202": 1000
+        },
+        "clientErrors": 0,
+        "elapsedMs": 1459.23609999998,
+        "throughputPerSecond": 685.2900637532293,
+        "roundTripMs": {
+          "samples": 1000,
+          "min": 4.959999999962747,
+          "mean": 11.601401099999201,
+          "p50": 11.281749999965541,
+          "p95": 17.490324999950825,
+          "p99": 20.964466999997384,
+          "max": 26.074199999915436
+        }
+      },
+      "drain": {
+        "elapsedFromFirstSendMs": 35479.351799999946,
+        "elapsedAfterLast202Ms": 34020.115699999966,
+        "throughputPerSecond": 28.18540782923778
+      },
+      "ledger": {
+        "eventCount": 1000,
+        "deliveryCount": 1000,
+        "deliveryStates": {
+          "PENDING": 0,
+          "IN_FLIGHT": 0,
+          "RETRY_WAIT": 0,
+          "SUCCEEDED": 1000,
+          "FAILED": 0
+        },
+        "attemptOutcomes": {
+          "IN_PROGRESS": 0,
+          "SUCCEEDED": 1000,
+          "FAILED": 0,
+          "UNKNOWN": 0
+        },
+        "attemptCount": 1000
+      },
+      "receiver": {
+        "requests": 1000,
+        "signaturesVerified": 1000,
+        "invalidSignatures": 0,
+        "invalidHeaders": 0,
+        "payloadMismatches": 0,
+        "duplicates": 0,
+        "responses204": 1000,
+        "requestFailures": 0,
+        "postResponseResets": 1000,
+        "connectionFailures": 0,
+        "peakInFlight": 4,
+        "socketError_ECONNRESET": 1000,
+        "socketError_HPE_INVALID_EOF_STATE": 0,
+        "socketError_HPE_HEADER_OVERFLOW": 0,
+        "socketError_HPE_INVALID_CONSTANT": 0,
+        "socketError_ERR_HTTP_REQUEST_TIMEOUT": 0,
+        "socketError_OTHER": 0,
+        "uniqueEvents": 1000
+      },
+      "storedAcceptedAtToFirstStartedAtMs": {
+        "samples": 1000,
+        "min": 42.363,
+        "mean": 19163.490766000003,
+        "p50": 20190.5445,
+        "p95": 33086.8799,
+        "p99": 33756.296800000004,
+        "max": 33926.29
+      },
+      "storedAcceptedAtToFinishedAtMs": {
+        "samples": 1000,
+        "min": 79.403,
+        "mean": 19190.919688000005,
+        "p50": 20234.2575,
+        "p95": 33108.127049999996,
+        "p99": 33778.210289999995,
+        "max": 33956.01
+      },
+      "persistedTransportDurationMs": {
+        "samples": 1000,
+        "min": 12,
+        "mean": 21.617999999999913,
+        "p50": 21,
+        "p95": 29,
+        "p99": 30,
+        "max": 55
+      }
+    },
+    {
+      "iteration": 2,
+      "status": "success",
+      "planned": 1000,
+      "attempted": 1000,
+      "accepted": 1000,
+      "acceptance": {
+        "statusCounts": {
+          "202": 1000
+        },
+        "clientErrors": 0,
+        "elapsedMs": 1468.4024000000209,
+        "throughputPerSecond": 681.0122347933957,
+        "roundTripMs": {
+          "samples": 1000,
+          "min": 4.645200000028126,
+          "mean": 11.679213900000555,
+          "p50": 10.630699999979697,
+          "p95": 20.330495000019432,
+          "p99": 23.828827999995553,
+          "max": 44.35400000005029
+        }
+      },
+      "drain": {
+        "elapsedFromFirstSendMs": 30178.66810000001,
+        "elapsedAfterLast202Ms": 28710.26569999999,
+        "throughputPerSecond": 33.135988529593185
+      },
+      "ledger": {
+        "eventCount": 1000,
+        "deliveryCount": 1000,
+        "deliveryStates": {
+          "PENDING": 0,
+          "IN_FLIGHT": 0,
+          "RETRY_WAIT": 0,
+          "SUCCEEDED": 1000,
+          "FAILED": 0
+        },
+        "attemptOutcomes": {
+          "IN_PROGRESS": 0,
+          "SUCCEEDED": 1000,
+          "FAILED": 0,
+          "UNKNOWN": 0
+        },
+        "attemptCount": 1000
+      },
+      "receiver": {
+        "requests": 1000,
+        "signaturesVerified": 1000,
+        "invalidSignatures": 0,
+        "invalidHeaders": 0,
+        "payloadMismatches": 0,
+        "duplicates": 0,
+        "responses204": 1000,
+        "requestFailures": 0,
+        "postResponseResets": 1000,
+        "connectionFailures": 0,
+        "peakInFlight": 4,
+        "socketError_ECONNRESET": 1000,
+        "socketError_HPE_INVALID_EOF_STATE": 0,
+        "socketError_HPE_HEADER_OVERFLOW": 0,
+        "socketError_HPE_INVALID_CONSTANT": 0,
+        "socketError_ERR_HTTP_REQUEST_TIMEOUT": 0,
+        "socketError_OTHER": 0,
+        "uniqueEvents": 1000
+      },
+      "storedAcceptedAtToFirstStartedAtMs": {
+        "samples": 1000,
+        "min": 67.88,
+        "mean": 19382.279282999985,
+        "p50": 21379.8465,
+        "p95": 27960.727000000003,
+        "p99": 28529.41874,
+        "max": 28654.069
+      },
+      "storedAcceptedAtToFinishedAtMs": {
+        "samples": 1000,
+        "min": 97.5,
+        "mean": 19410.45484399997,
+        "p50": 21402.313499999997,
+        "p95": 27990.8594,
+        "p99": 28557.715320000003,
+        "max": 28680.115
+      },
+      "persistedTransportDurationMs": {
+        "samples": 1000,
+        "min": 12,
+        "mean": 22.164999999999687,
+        "p50": 23,
+        "p95": 28,
+        "p99": 41,
+        "max": 90
+      }
+    },
+    {
+      "iteration": 3,
+      "status": "success",
+      "planned": 1000,
+      "attempted": 1000,
+      "accepted": 1000,
+      "acceptance": {
+        "statusCounts": {
+          "202": 1000
+        },
+        "clientErrors": 0,
+        "elapsedMs": 1151.2249000000302,
+        "throughputPerSecond": 868.6400024877622,
+        "roundTripMs": {
+          "samples": 1000,
+          "min": 3.1497000000672415,
+          "mean": 9.132574399998747,
+          "p50": 8.256699999968987,
+          "p95": 16.572320000012397,
+          "p99": 20.92820499994908,
+          "max": 28.461699999985285
+        }
+      },
+      "drain": {
+        "elapsedFromFirstSendMs": 15675.130800000043,
+        "elapsedAfterLast202Ms": 14523.905900000012,
+        "throughputPerSecond": 63.79532092963443
+      },
+      "ledger": {
+        "eventCount": 1000,
+        "deliveryCount": 1000,
+        "deliveryStates": {
+          "PENDING": 0,
+          "IN_FLIGHT": 0,
+          "RETRY_WAIT": 0,
+          "SUCCEEDED": 1000,
+          "FAILED": 0
+        },
+        "attemptOutcomes": {
+          "IN_PROGRESS": 0,
+          "SUCCEEDED": 1000,
+          "FAILED": 0,
+          "UNKNOWN": 0
+        },
+        "attemptCount": 1000
+      },
+      "receiver": {
+        "requests": 1000,
+        "signaturesVerified": 1000,
+        "invalidSignatures": 0,
+        "invalidHeaders": 0,
+        "payloadMismatches": 0,
+        "duplicates": 0,
+        "responses204": 1000,
+        "requestFailures": 0,
+        "postResponseResets": 1000,
+        "connectionFailures": 0,
+        "peakInFlight": 4,
+        "socketError_ECONNRESET": 1000,
+        "socketError_HPE_INVALID_EOF_STATE": 0,
+        "socketError_HPE_HEADER_OVERFLOW": 0,
+        "socketError_HPE_INVALID_CONSTANT": 0,
+        "socketError_ERR_HTTP_REQUEST_TIMEOUT": 0,
+        "socketError_OTHER": 0,
+        "uniqueEvents": 1000
+      },
+      "storedAcceptedAtToFirstStartedAtMs": {
+        "samples": 1000,
+        "min": 32.593,
+        "mean": 7244.915567999999,
+        "p50": 7191.3330000000005,
+        "p95": 13776.776,
+        "p99": 14364.29316,
+        "max": 14482.556
+      },
+      "storedAcceptedAtToFinishedAtMs": {
+        "samples": 1000,
+        "min": 57.142,
+        "mean": 7271.32097399999,
+        "p50": 7214.776,
+        "p95": 13807.331100000001,
+        "p99": 14390.28312,
+        "max": 14512.341
+      },
+      "persistedTransportDurationMs": {
+        "samples": 1000,
+        "min": 12,
+        "mean": 21.793000000000028,
+        "p50": 23,
+        "p95": 25,
+        "p99": 27,
+        "max": 36
+      }
+    }
+  ],
+  "cleanup": {
+    "processesStopped": true,
+    "receiverClosed": true,
+    "fixturesRemoved": true,
+    "databaseClosed": true,
+    "ownershipGranted": true
+  },
+  "finalCounts": {
+    "submitted": 3100,
+    "events": 3100,
+    "deliveries": 3100,
+    "attempts": 3100,
+    "receiverUniqueEvents": 3100,
+    "verifiedSignatures": 3100,
+    "duplicateRequests": 0
+  },
+  "completedAt": "2026-10-27T20:01:40.330Z"
+}

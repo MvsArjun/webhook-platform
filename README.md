@@ -1,7 +1,7 @@
 # Relay
 
 A webhook delivery platform built incrementally for backend and infrastructure practice.
-**Current scope: Phase 7c, verified.** [Hosted GitHub Actions passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40519589217) on Ubuntu with Docker: 159 backend tests, the frontend build and both real Chromium journeys. Structured correlation logs, operator-protected metrics, minimal health/readiness probes, graceful worker shutdown and the customer dashboard are available. See [CI jobs and verification limits](docs/CI.md), [observability and operator setup](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use and browser tests](docs/DASHBOARD.md). Load measurements and final deployment verification remain later Phase 7 work.
+**Current scope: Phase 7d1, healthy load measured.** The [reproducible benchmark and results](docs/LOAD_TESTING.md) cover three batches of 1,000 events: observed full-drain throughput was 28.2–63.8 events/s on the stated shared Windows host, with all 3,100 events including warmup matched to successful signed deliveries. This is a bounded workload observation, not a capacity claim. [Hosted GitHub Actions passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40519589217) for Phase 7c on Ubuntu/Docker: 159 backend tests, frontend build and both real Chromium journeys. See [CI jobs and verification limits](docs/CI.md), [observability and operator setup](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use](docs/DASHBOARD.md). Failure/recovery demonstrations and final startup/deployment verification remain later Phase 7 work.
 
 ## Prerequisites and pinned versions
 
@@ -16,7 +16,7 @@ A webhook delivery platform built incrementally for backend and infrastructure p
 | Node / npm | 22.23.4 / 10.9.9 |
 | React / React DOM | 19.3.1 |
 | TypeScript / Vite / React plugin | 7.0.2 / 8.3.5 / 6.1.2 |
-| Browser test tools | Playwright 1.64.1; its Chromium build; node-postgres 8.23.1 (test harness only) |
+| Test/benchmark tools | Playwright 1.64.1; its Chromium build; node-postgres 8.23.1 (local harnesses only) |
 | Flyway / Testcontainers / JUnit Jupiter | 12.4.0 / 2.0.5 / 6.0.3, pinned by the Spring Boot dependency BOM |
 
 Install Docker with the Compose v2 plugin for the standard local flow and default integration tests. Java and Node version files are at the repository root. All npm versions are exact and `package-lock.json` fixes the dependency tree. Maven libraries and build plugins use the fixed Spring Boot parent/BOM; there are no floating dependency versions.
@@ -128,6 +128,7 @@ The test role must own the database and be allowed to create tables. This path u
 - [Graceful worker shutdown](docs/WORKER_SHUTDOWN.md): admission, bounded draining/cancellation and recoverable unfinished work.
 - [Observability](docs/OBSERVABILITY.md): structured correlation logs, minimal probes, independent operator access and durable metric definitions/freshness.
 - [Continuous integration](docs/CI.md): pinned GitHub Actions, full backend/browser checks, output privacy and first hosted-run verification.
+- [Load measurements](docs/LOAD_TESTING.md): reproducible healthy workload, guarded database setup, timing definitions and measured results.
 - [Retries and manual replay](docs/RETRIES.md): retryable outcomes, budgets, timing, replay routes and race handling.
 - [Delivery security and limits](docs/DELIVERY_SECURITY.md): signing/verification, secret setup, the sample receiver, response capture and workspace capacity.
 - [Dashboard](docs/DASHBOARD.md): customer workflows, browser state, local preview and end-to-end verification.
