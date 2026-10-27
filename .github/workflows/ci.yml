@@ -1,0 +1,150 @@
+name: Relay CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: 'true'
+  JAVA_VERSION: '21.0.12.1+1'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  backend:
+    name: Backend and workflow checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Validate workflow syntax
+        env:
+          ACTIONLINT_VERSION: '1.7.12'
+          ACTIONLINT_SHA256: '8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8'
+        run: |
+          validator_dir=$(mktemp -d "$RUNNER_TEMP/relay-actionlint.XXXXXX")
+          archive="$validator_dir/actionlint.tar.gz"
+          curl --fail --location --retry 3 --output "$archive" \
+            "https://github.com/rhysd/actionlint/releases/download/v${ACTIONLINT_VERSION}/actionlint_${ACTIONLINT_VERSION}_linux_amd64.tar.gz"
+          printf '%s  %s\n' "$ACTIONLINT_SHA256" "$archive" | sha256sum --check --status
+          tar -xzf "$archive" -C "$validator_dir" actionlint
+          "$validator_dir/actionlint" -shellcheck= -pyflakes= .github/workflows/ci.yml
+
+      - name: Set up pinned JDK
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+          overwrite-settings: false
+
+      - name: Check Docker and Java
+        run: |
+          docker info > /dev/null
+          java -version
+
+      - name: Run unit and PostgreSQL integration tests
+        working-directory: backend
+        timeout-minutes: 18
+        run: |
+          # Assertions can include synthetic credentials. Publish only numeric summaries.
+          log="$RUNNER_TEMP/relay-backend-verify.log"
+          result=0
+          env -u TEST_DB_URL -u TEST_DB_USERNAME -u TEST_DB_PASSWORD \
+            sh ./mvnw -B -ntp clean verify > "$log" 2>&1 || result=$?
+          grep -E '^\[INFO\] Tests run: [0-9]+, Failures: [0-9]+, Errors: [0-9]+, Skipped: [0-9]+$' "$log" || true
+          if [ "$result" -ne 0 ]; then
+            echo '::error::Backend verification failed. Reproduce with backend/mvnw clean verify; raw test output is not published.'
+          fi
+          exit "$result"
+
+  dashboard:
+    name: Dashboard build and Chromium journeys
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17.11-bookworm
+        env:
+          POSTGRES_DB: relay_ci_e2e
+          POSTGRES_USER: relay_ci
+          # Disposable service only; never an application/deployment credential.
+          POSTGRES_PASSWORD: relay-ci-disposable
+        ports:
+          - '127.0.0.1:5432:5432'
+        options: >-
+          --health-cmd "pg_isready -U relay_ci -d relay_ci_e2e"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/work/playwright-browsers
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up pinned JDK
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
+          cache-dependency-path: backend/pom.xml
+          overwrite-settings: false
+
+      - name: Set up pinned Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+          package-manager-cache: false
+
+      - name: Check runtime versions
+        run: |
+          java -version
+          node --version
+          test "$(npm --version)" = '10.9.9'
+
+      - name: Package backend for browser tests
+        working-directory: backend
+        run: sh ./mvnw -B -ntp -Dmaven.test.skip=true package
+
+      - name: Install locked frontend dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build dashboard
+        working-directory: frontend
+        run: npm run build
+
+      - name: Install pinned Chromium and Linux libraries
+        working-directory: frontend
+        run: node node_modules/playwright/cli.js install --with-deps chromium
+
+      - name: Run real browser journeys
+        working-directory: frontend
+        timeout-minutes: 8
+        env:
+          E2E_DB_URL: jdbc:postgresql://127.0.0.1:5432/relay_ci_e2e
+          E2E_DB_USERNAME: relay_ci
+          E2E_DB_PASSWORD: relay-ci-disposable
+          E2E_DB_ALLOW_DESTRUCTIVE: 'true'
+        run: npm run test:e2e
