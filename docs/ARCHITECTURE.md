@@ -1,4 +1,4 @@
-# Architecture — Phase 7d1
+# Architecture — Phase 7d2
 
 ## Shape and modules
 
@@ -94,5 +94,7 @@ Phase 7c adds two independent GitHub Actions jobs: full backend verification usi
 
 Phase 7d1 adds a bounded Node harness around the packaged API, separate worker, dedicated PostgreSQL database and independent verifying receiver. It bootstraps real API credentials, compares accepted IDs to committed ledger rows and signed receipts, records monotonic client/drain timings separately from stored SQL timestamps, and removes owned fixtures. Three 1,000-event batches on the stated shared host completed successfully; observed drain varied from 28.2 to 63.8 events/s. See [workload, measurement definitions, hardware and results](LOAD_TESTING.md). Healthy observations do not establish sustainable capacity or fault behavior.
 
-Later Phase 7 subphases demonstrate destination/worker recovery and finish deployment guidance and final verification. The status route remains a local connectivity check and its phase 7 value does not imply all Phase 7 work is complete.
+Phase 7d2 adds two controlled failure demonstrations around the same application artifact. A verified503 triggers automatic retry and a verified204; forced worker termination after a simulated receiver effect leaves an unfinished attempt, then natural PostgreSQL-clock lease expiry records UNKNOWN before the replacement succeeds. Receiver memory deduplication illustrates prevention of a repeated effect for the stable event ID; it resets on receiver restart. The runner changes no delivery timestamps or history to accelerate recovery. See [orchestration, retained histories and limits](FAILURE_DEMONSTRATIONS.md).
+
+Later Phase 7 work finishes deployment guidance and final startup/project verification. The status route remains a local connectivity check and its phase 7 value does not imply all Phase 7 work is complete.
 

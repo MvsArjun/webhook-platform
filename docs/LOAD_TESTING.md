@@ -1,6 +1,6 @@
 # Reproducible load measurements — Phase 7d1
 
-`frontend/bench/run.mjs` runs a bounded healthy workload against the packaged API, a separate worker and PostgreSQL. Its local receiver verifies the actual HMAC signature and exact payload bytes. This subphase measures load; destination-failure and worker-crash demonstrations remain Phase 7d2.
+`frontend/bench/run.mjs` runs a bounded healthy workload against the packaged API, a separate worker and PostgreSQL. Its local receiver verifies the actual HMAC signature and exact payload bytes. This subphase measures healthy load; the separate [Phase 7d2 failure demonstrations](FAILURE_DEMONSTRATIONS.md) cover destination and worker recovery.
 
 ## Workload and interpretation
 

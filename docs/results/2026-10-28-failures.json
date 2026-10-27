@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "result": "success",
+  "startedAt": "2026-10-27T20:18:30.529Z",
+  "settings": {
+    "events": 2,
+    "payloadBytes": 1024,
+    "workerConcurrency": 1,
+    "workspaceConcurrency": 4,
+    "pollIntervalMs": 50,
+    "requestTimeoutMs": 5000,
+    "connectTimeoutMs": 2000,
+    "dnsTimeoutMs": 1000,
+    "leaseMs": 30000,
+    "leaseSafetyMs": 1000,
+    "maxAttempts": 5,
+    "retryBaseDelayMs": 1000,
+    "retryMaxDelayMs": 300000,
+    "scenarioDeadlineMs": 90000,
+    "jvmInitialHeapMiB": 64,
+    "jvmMaximumHeapMiB": 256,
+    "hikariMaximumPoolSize": 5,
+    "signing": true,
+    "metricsEnabled": false,
+    "logging": "ECS INFO; child output discarded after bounded worker readiness",
+    "transport": "literal-loopback HTTP development exception",
+    "ambientPgOptionsIgnored": true,
+    "recovery": "natural PostgreSQL-clock lease expiry; no ledger/time mutation",
+    "receiverDeduplication": "in-memory event ID plus matching payload digest; resets on receiver restart"
+  },
+  "environment": {
+    "os": {
+      "platform": "win32",
+      "release": "10.0.26300",
+      "architecture": "x64"
+    },
+    "cpu": {
+      "model": "AMD Ryzen 5 6600H with Radeon Graphics",
+      "logicalCores": 12
+    },
+    "ramBytes": 16312721408,
+    "node": "22.23.4",
+    "java": {
+      "vendor": "Eclipse Temurin",
+      "version": "21.0.12.1",
+      "build": "21.0.12.1+1",
+      "fullJdk": true
+    },
+    "postgres": {
+      "version": "17.11",
+      "fsync": "on",
+      "synchronousCommit": "on",
+      "fullPageWrites": "on"
+    },
+    "jarSha256": "7501fd613883a50bfe23b689b966e261fb23624b297d54f90c6ecc57ca6f9465"
+  },
+  "destinationRecovery": {
+    "result": "success",
+    "elapsedMs": 1023.966499999864,
+    "acceptedEvents": 1,
+    "retryWaitObserved": true,
+    "stableEventDeliveryPayload": true,
+    "distinctAttemptIds": true,
+    "replayUsed": false,
+    "history": [
+      {
+        "claimGeneration": 1,
+        "replayGeneration": 0,
+        "runAttempt": 1,
+        "outcome": "FAILED",
+        "httpStatus": 503,
+        "failureCode": "HTTP_STATUS",
+        "durationMs": 257,
+        "finished": true
+      },
+      {
+        "claimGeneration": 2,
+        "replayGeneration": 0,
+        "runAttempt": 2,
+        "outcome": "SUCCEEDED",
+        "httpStatus": 204,
+        "failureCode": null,
+        "durationMs": 5,
+        "finished": true
+      }
+    ],
+    "receiver": {
+      "verifiedRequests": 2,
+      "responseStatuses": [
+        503,
+        204
+      ],
+      "effectApplications": 1
+    }
+  },
+  "workerRecovery": {
+    "result": "success",
+    "elapsedMs": 31147.472300000023,
+    "forcedExitMs": 532.6410000000615,
+    "crashMethod": "taskkill /T /F on owned worker",
+    "receiverEffectBeforeKill": true,
+    "responseWithheld": true,
+    "workerExitConfirmed": true,
+    "inFlightAndInProgressAfterKill": true,
+    "leaseUnexpiredAfterKill": true,
+    "naturalExpiryBeforeUnknown": true,
+    "stableEventDeliveryPayload": true,
+    "distinctAttemptIds": true,
+    "replayUsed": false,
+    "history": [
+      {
+        "claimGeneration": 1,
+        "replayGeneration": 0,
+        "runAttempt": 1,
+        "outcome": "UNKNOWN",
+        "httpStatus": null,
+        "failureCode": null,
+        "durationMs": null,
+        "finished": true
+      },
+      {
+        "claimGeneration": 2,
+        "replayGeneration": 0,
+        "runAttempt": 2,
+        "outcome": "SUCCEEDED",
+        "httpStatus": 204,
+        "failureCode": null,
+        "durationMs": 291,
+        "finished": true
+      }
+    ],
+    "receiver": {
+      "verifiedRequests": 2,
+      "completedResponses204": 1,
+      "intentionalCrashDisconnects": 1,
+      "effectApplications": 1,
+      "duplicateEffectsPrevented": 1
+    }
+  },
+  "cleanup": {
+    "ownershipGranted": true,
+    "processesStopped": true,
+    "receiverClosed": true,
+    "fixturesRemoved": true,
+    "databaseClosed": true
+  },
+  "finalCounts": {
+    "acceptedEvents": 2,
+    "durableEvents": 2,
+    "durableDeliveries": 2,
+    "retainedAttempts": 4,
+    "verifiedReceiverRequests": 4,
+    "simulatedEffects": 2,
+    "duplicateEffectsPrevented": 1,
+    "receiverCounters": {
+      "requests": 4,
+      "signaturesVerified": 4,
+      "invalidSignatures": 0,
+      "invalidHeaders": 0,
+      "payloadMismatches": 0,
+      "unexpectedRequests": 0,
+      "responses503": 1,
+      "responses204": 2,
+      "effectApplications": 2,
+      "duplicateEffectsPrevented": 1,
+      "intentionalCrashDisconnects": 1,
+      "requestFailures": 0,
+      "connectionFailures": 0,
+      "postResponseResets": 3,
+      "droppedConnections": 0,
+      "peakInFlight": 1,
+      "serverErrors": 0,
+      "socketError_ECONNRESET": 4,
+      "socketError_HPE_INVALID_EOF_STATE": 0,
+      "socketError_HPE_HEADER_OVERFLOW": 0,
+      "socketError_HPE_INVALID_CONSTANT": 0,
+      "socketError_ERR_HTTP_REQUEST_TIMEOUT": 0,
+      "socketError_OTHER": 0
+    }
+  },
+  "completedAt": "2026-10-27T20:19:19.434Z"
+}

@@ -1,4 +1,4 @@
-# Continuous integration — Phase 7d1
+# Continuous integration — Phase 7d2
 
 `.github/workflows/ci.yml` defines two independent GitHub Actions jobs for pushes, pull requests and manual runs. Both jobs must succeed. There are no deployment steps or production credentials.
 
@@ -9,13 +9,13 @@
 | Job | Checks |
 | --- | --- |
 | Backend and workflow checks | Checksummed actionlint validates the workflow; Docker preflight; the Maven wrapper runs `clean verify`, including unit tests, real PostgreSQL integration tests and packaged-worker/receiver process tests |
-| Dashboard build and Chromium journeys | Packages the current backend; fresh `npm ci`; TypeScript/production build; benchmark guard/calculation/receiver checks; installs the pinned Chromium plus Linux libraries; runs both existing real browser journeys against the API, separate worker and controllable receiver |
+| Dashboard build and Chromium journeys | Packages the current backend; fresh `npm ci`; TypeScript/production build; benchmark and failure-receiver checks; installs pinned Chromium/Linux libraries; runs both real browser journeys, then both real failure demonstrations with natural lease expiry against separate disposable databases |
 
 Both jobs use a host `ubuntu-24.04` VM, full Temurin JDK **21.0.12.1+1**, and the repository's checksum-verified Maven **3.9.16** wrapper. The dashboard uses `.node-version` (**22.23.4**) and checks bundled npm **10.9.9**. Frontend packages and Playwright **1.64.1** remain fixed by `package-lock.json`; the installed Playwright CLI selects its matching Chromium. No globally installed Playwright is used.
 
 The backend job explicitly unsets `TEST_DB_URL`, `TEST_DB_USERNAME` and `TEST_DB_PASSWORD`, forcing the default Testcontainers path with `postgres:17.11-bookworm`. Docker failure fails the job. Test execution stays serial, with Ryuk/default container cleanup enabled. `mvnw test` alone would omit integration tests and the packaged artifact, so it is not the CI command.
 
-The dashboard job gets a separate disposable `postgres:17.11-bookworm` service. It publishes port 5432 only on loopback, creates `relay_ci_e2e`, and waits for its PostgreSQL health check. The visible `relay-ci-disposable` password is exclusively a credential for this throwaway service. It is not an application/deployment secret and is not needed outside that job. Browser settings are scoped to the final test step:
+The dashboard job gets a separate disposable `postgres:17.11-bookworm` service. It publishes port 5432 only on loopback, creates `relay_ci_e2e`, and waits for its PostgreSQL health check. The visible `relay-ci-disposable` password is exclusively a credential for this throwaway service. It is not an application/deployment secret and is not needed outside that job. Browser settings are scoped to the browser-journey step:
 
 - `E2E_DB_URL=jdbc:postgresql://127.0.0.1:5432/relay_ci_e2e`
 - `E2E_DB_USERNAME=relay_ci` and the matching disposable password
@@ -58,6 +58,8 @@ actionlint -shellcheck= -pyflakes= .github/workflows/ci.yml
 
 The workflow is on `main` in the private repository linked above. A push or pull request runs CI; manual dispatch is available from Actions. No production secrets need configuring. For every revision, inspect both named jobs, nonzero unit/integration summaries, both browser journeys and the overall conclusion. A green result belongs to the commit actually checked, not all future revisions. Repository branch protection/required-check settings are separate repository settings and were not configured here. The local working directory remains a file copy without Git metadata; publishing used the connected GitHub API rather than importing unrelated local history.
 
-Phase 7d1 adds `npm run test:bench` to the dashboard job: 16 guard, calculation and receiver tests. The actual [load benchmark and retained measurements](LOAD_TESTING.md) run manually on explicitly recorded hardware; CI does not run a hardware-dependent performance threshold. Destination/worker failure demonstrations, final startup/deployment guidance and final project verification remain later Phase 7 work.
+Phase 7d1 adds `npm run test:bench` to the dashboard job: 16 guard, calculation and receiver tests. Its [hosted run40574840249](https://github.com/MvsArjun/webhook-platform/actions/runs/40574840249), commit `9daf06bdaf7c528ee369a5e092ee0c03050aa49e`, passed those checks plus the159 backend tests, frontend build and both browser journeys. The actual [load benchmark and retained measurements](LOAD_TESTING.md) run manually on explicitly recorded hardware; CI does not run a hardware-dependent performance threshold.
+
+Phase 7d2 adds eight failure-receiver tests and the [real destination/worker recovery demonstrations](FAILURE_DEMONSTRATIONS.md). After browser tests, CI creates `relay_ci_failures_bench` inside the existing disposable PostgreSQL service and runs the controller with a six-minute step limit. This database is separate from the browser database. The Linux path uses SIGKILL on the owned worker process group and waits for natural30s lease expiry; it does not modify ledger timestamps. Only a fixed pass/failure notice is printed, with safe JSON retained in ignored workspace storage and no artifact upload. The service container ID comes from the documented [job service context](https://docs.github.com/en/actions/reference/workflows-and-actions/contexts#job-context). Final startup/deployment guidance and final project verification remain later work.
 
 Primary references: [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax), [secure workflow use](https://docs.github.com/en/actions/reference/security/secure-use), [service containers](https://docs.github.com/en/actions/tutorials/use-containerized-services/use-docker-service-containers), [Playwright CI installation](https://playwright.dev/docs/ci-intro), [actionlint 1.7.12](https://github.com/rhysd/actionlint/releases/tag/v1.7.12). Action pins were checked against the official [checkout release](https://github.com/actions/checkout/releases/tag/v7.0.1), [Java setup release](https://github.com/actions/setup-java/releases/tag/v6.1.0) and [Node setup release](https://github.com/actions/setup-node/releases/tag/v7.1.0) on 2026-10-27.

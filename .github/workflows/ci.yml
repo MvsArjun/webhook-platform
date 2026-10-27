@@ -139,6 +139,10 @@ jobs:
         working-directory: frontend
         run: npm run test:bench
 
+      - name: Check failure demonstration receiver
+        working-directory: frontend
+        run: npm run test:failures
+
       - name: Install pinned Chromium and Linux libraries
         working-directory: frontend
         run: node node_modules/playwright/cli.js install --with-deps chromium
@@ -152,3 +156,18 @@ jobs:
           E2E_DB_PASSWORD: relay-ci-disposable
           E2E_DB_ALLOW_DESTRUCTIVE: 'true'
         run: npm run test:e2e
+
+      - name: Create isolated failure demonstration database
+        env:
+          POSTGRES_SERVICE_ID: ${{ job.services.postgres.id }}
+        run: docker exec "$POSTGRES_SERVICE_ID" createdb --username=relay_ci relay_ci_failures_bench
+
+      - name: Demonstrate destination and worker recovery
+        working-directory: frontend
+        timeout-minutes: 6
+        env:
+          BENCH_DB_URL: jdbc:postgresql://127.0.0.1:5432/relay_ci_failures_bench
+          BENCH_DB_USERNAME: relay_ci
+          BENCH_DB_PASSWORD: relay-ci-disposable
+          BENCH_DB_ALLOW_DESTRUCTIVE: 'true'
+        run: npm run demo:failures

@@ -13,7 +13,9 @@
     "test:e2e": "tsc -p tsconfig.e2e.json && node e2e/run.mjs",
     "test:e2e:install": "node e2e/install.mjs",
     "test:bench": "node --check bench/run.mjs && node --test bench/*.test.mjs",
-    "bench": "node bench/run.mjs"
+    "bench": "node bench/run.mjs",
+    "test:failures": "node --check failure-demo/run.mjs && node --check failure-demo/runtime.mjs && node --test failure-demo/*.test.mjs",
+    "demo:failures": "node failure-demo/run.mjs"
   },
   "dependencies": {
     "react": "19.3.1",

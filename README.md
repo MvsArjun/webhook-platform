@@ -1,7 +1,7 @@
 # Relay
 
 A webhook delivery platform built incrementally for backend and infrastructure practice.
-**Current scope: Phase 7d1, healthy load measured.** The [reproducible benchmark and results](docs/LOAD_TESTING.md) cover three batches of 1,000 events: observed full-drain throughput was 28.2–63.8 events/s on the stated shared Windows host, with all 3,100 events including warmup matched to successful signed deliveries. This is a bounded workload observation, not a capacity claim. [Hosted GitHub Actions passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40519589217) for Phase 7c on Ubuntu/Docker: 159 backend tests, frontend build and both real Chromium journeys. See [CI jobs and verification limits](docs/CI.md), [observability and operator setup](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use](docs/DASHBOARD.md). Failure/recovery demonstrations and final startup/deployment verification remain later Phase 7 work.
+**Current scope: Phase 7d2, load and failure demonstrations verified locally.** The [reproducible failure demonstrations](docs/FAILURE_DEMONSTRATIONS.md) show a 503 followed by successful retry and a forcibly killed worker recovering through natural lease expiry, preserving UNKNOWN history and preventing a second simulated receiver effect. The separate [healthy load results](docs/LOAD_TESTING.md) record 28.2–63.8 observed drain events/s on a stated shared host; this is not a capacity claim. The [Phase 7d1 hosted baseline passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40574840249): 159 backend tests, 16 benchmark checks, frontend build and both Chromium journeys. See [current CI jobs and limits](docs/CI.md), [observability](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use](docs/DASHBOARD.md). Final startup/deployment verification remains later Phase 7 work.
 
 ## Prerequisites and pinned versions
 
@@ -129,6 +129,7 @@ The test role must own the database and be allowed to create tables. This path u
 - [Observability](docs/OBSERVABILITY.md): structured correlation logs, minimal probes, independent operator access and durable metric definitions/freshness.
 - [Continuous integration](docs/CI.md): pinned GitHub Actions, full backend/browser checks, output privacy and first hosted-run verification.
 - [Load measurements](docs/LOAD_TESTING.md): reproducible healthy workload, guarded database setup, timing definitions and measured results.
+- [Failure demonstrations](docs/FAILURE_DEMONSTRATIONS.md): destination recovery, forced worker termination, natural lease recovery and receiver deduplication limits.
 - [Retries and manual replay](docs/RETRIES.md): retryable outcomes, budgets, timing, replay routes and race handling.
 - [Delivery security and limits](docs/DELIVERY_SECURITY.md): signing/verification, secret setup, the sample receiver, response capture and workspace capacity.
 - [Dashboard](docs/DASHBOARD.md): customer workflows, browser state, local preview and end-to-end verification.
