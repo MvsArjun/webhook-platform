@@ -95,7 +95,7 @@ Use this **same key** in every API and worker process and retain it with the dat
    Invoke-RestMethod http://127.0.0.1:8080/api/system/status
    ```
 
-   Expected JSON: `{"service":"relay","role":"api","phase":7,"database":"connected"}`. The phase number identifies ongoing Phase 7 work; subphases 7a–7b are implemented. This connectivity route queries PostgreSQL on every call and fails if it cannot connect. Flyway must succeed before the API starts. Minimal probes are `GET /actuator/health/liveness` and `GET /actuator/health/readiness`; readiness includes database health, while liveness does not. Metrics are disabled by default and require a separate operator credential; follow [operator setup and metric definitions](docs/OBSERVABILITY.md).
+   Expected JSON: `{"service":"relay","role":"api","phase":7,"database":"connected"}`. The phase number identifies ongoing Phase 7 work; subphases 7a–7c are implemented. This connectivity route queries PostgreSQL on every call and fails if it cannot connect. Flyway must succeed before the API starts. Minimal probes are `GET /actuator/health/liveness` and `GET /actuator/health/readiness`; readiness includes database health, while liveness does not. Metrics are disabled by default and require a separate operator credential; follow [operator setup and metric definitions](docs/OBSERVABILITY.md).
 
 Stop application terminals with Ctrl+C, then `docker compose down`. The named PostgreSQL volume retains data. Changing a password in `.env` after the database has been initialized does not change the stored database password; update the role in PostgreSQL when needed. Never edit an already-applied migration; add `V8__...sql` for the next schema change.
 
