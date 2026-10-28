@@ -453,6 +453,9 @@ finally {
         `${JSON.stringify(report,null,2)}\n`,{flag:'wx',mode:0o600})
     } catch {report.result='failure';process.exitCode=1}
   }
+  const stages = ['configuration','docker_preflight','owned_compose_configuration','first_startup','first_delivery',
+    'retained_restart','final_validation','cleanup']
+  const safeStage = stages.includes(report.failureStage) ? report.failureStage : 'report'
   console.log(report.result==='success'?'[Startup] Compose, development startup, retained restart and cleanup passed.'
-    :'[Startup] Verification failed; raw diagnostics and configuration are suppressed.')
+    :`[Startup] Failed at ${safeStage}; raw diagnostics and configuration are suppressed.`)
 }
