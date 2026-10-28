@@ -1,4 +1,4 @@
-# Architecture — Phase 7d2
+# Architecture — Phase 7e
 
 ## Shape and modules
 
@@ -96,5 +96,7 @@ Phase 7d1 adds a bounded Node harness around the packaged API, separate worker, 
 
 Phase 7d2 adds two controlled failure demonstrations around the same application artifact. A verified503 triggers automatic retry and a verified204; forced worker termination after a simulated receiver effect leaves an unfinished attempt, then natural PostgreSQL-clock lease expiry records UNKNOWN before the replacement succeeds. Receiver memory deduplication illustrates prevention of a repeated effect for the stable event ID; it resets on receiver restart. The runner changes no delivery timestamps or history to accelerate recovery. See [orchestration, retained histories and limits](FAILURE_DEMONSTRATIONS.md).
 
-Later Phase 7 work finishes deployment guidance and final startup/project verification. The status route remains a local connectivity check and its phase 7 value does not imply all Phase 7 work is complete.
+Phase 7e adds an isolated walkthrough of the actual Compose file and Vite development server. It verifies successful signed delivery through the Java sample, normal process shutdown, retained PostgreSQL data, master-key reuse/decryption and session loss across restart, then removes only owned temporary resources. Existing browser journeys exercise the separately built dashboard. See [startup checks and evidence boundaries](STARTUP_VERIFICATION.md).
+
+The [deployment reference](DEPLOYMENT.md) uses one API and one worker from the same immutable artifact, a private PostgreSQL database and an HTTPS/static frontend proxy. It keeps management access private and describes configuration, maintenance releases, backups and restore risks. It is guidance for an existing host, not an executed public deployment. The phase 7 status value is feature metadata; probes and recorded checks have their own narrower meanings.
 

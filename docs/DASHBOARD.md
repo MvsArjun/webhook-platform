@@ -19,7 +19,7 @@ Passwords, raw API keys, signing secrets and CSRF tokens are not saved in local 
 
 Workspace views and event details have hash URLs that can be bookmarked. Filters and page positions stay in component memory and reset when leaving that view. A workspace created in a different browser tab becomes available after a page reload. Narrow screens keep tables within horizontally scrolling panels; event IDs stay on one line.
 
-Events, endpoints and attempts show ten records per page. Filters execute in PostgreSQL before pagination and do not scan just the visible page. The endpoint filter accepts the complete UUID shown on the Endpoints page, so it can target any endpoint. Concurrent inserts can shift offset page boundaries; use the explicit Refresh actions to obtain current state. Loading, empty and error states are explicit. The dashboard is an inspection/management UI, not a live metrics stream. Shared sessions, account recovery, authentication throttling, operational metrics and production hosting remain outside Phase 6.
+Events, endpoints and attempts show ten records per page. Filters execute in PostgreSQL before pagination and do not scan just the visible page. The endpoint filter accepts the complete UUID shown on the Endpoints page, so it can target any endpoint. Concurrent inserts can shift offset page boundaries; use the explicit Refresh actions to obtain current state. Loading, empty and error states are explicit. The dashboard is an inspection/management UI, not a live metrics stream. [Operator metrics](OBSERVABILITY.md) and [deployment guidance](DEPLOYMENT.md) were added in Phase 7. Shared sessions, account recovery and authentication throttling remain unimplemented. Public hosting has not been provisioned.
 
 ## Browser tests
 

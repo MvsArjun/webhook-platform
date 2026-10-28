@@ -1,7 +1,7 @@
 # Relay
 
 A webhook delivery platform built incrementally for backend and infrastructure practice.
-**Current scope: Phase 7d2, load and failure demonstrations verified locally.** The [reproducible failure demonstrations](docs/FAILURE_DEMONSTRATIONS.md) show a 503 followed by successful retry and a forcibly killed worker recovering through natural lease expiry, preserving UNKNOWN history and preventing a second simulated receiver effect. The separate [healthy load results](docs/LOAD_TESTING.md) record 28.2–63.8 observed drain events/s on a stated shared host; this is not a capacity claim. The [Phase 7d1 hosted baseline passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40574840249): 159 backend tests, 16 benchmark checks, frontend build and both Chromium journeys. See [current CI jobs and limits](docs/CI.md), [observability](docs/OBSERVABILITY.md), [shutdown behavior](docs/WORKER_SHUTDOWN.md) and [dashboard use](docs/DASHBOARD.md). Final startup/deployment verification remains later Phase 7 work.
+**Portfolio implementation complete through Phase 7.** Relay includes the customer dashboard, durable ingestion, bounded signed delivery/retries/replay, worker recovery, shutdown, observability, CI and measured load/failure demonstrations. [Hosted verification passed](https://github.com/MvsArjun/webhook-platform/actions/runs/40661856462), including the actual Compose/development startup and retained-data restart. See [startup evidence and limits](docs/STARTUP_VERIFICATION.md), [single-host deployment instructions](docs/DEPLOYMENT.md), [CI checks](docs/CI.md) and [architecture](docs/ARCHITECTURE.md). The [healthy load results](docs/LOAD_TESTING.md) record 28.2–63.8 observed drain events/s on a stated shared host; this is not a capacity claim. [Failure demonstrations](docs/FAILURE_DEMONSTRATIONS.md) preserve UNKNOWN history and illustrate receiver-side deduplication. No public production deployment or paid infrastructure is provisioned.
 
 ## Prerequisites and pinned versions
 
@@ -95,7 +95,7 @@ Use this **same key** in every API and worker process and retain it with the dat
    Invoke-RestMethod http://127.0.0.1:8080/api/system/status
    ```
 
-   Expected JSON: `{"service":"relay","role":"api","phase":7,"database":"connected"}`. The phase number identifies ongoing Phase 7 work; subphases 7a–7c are implemented. This connectivity route queries PostgreSQL on every call and fails if it cannot connect. Flyway must succeed before the API starts. Minimal probes are `GET /actuator/health/liveness` and `GET /actuator/health/readiness`; readiness includes database health, while liveness does not. Metrics are disabled by default and require a separate operator credential; follow [operator setup and metric definitions](docs/OBSERVABILITY.md).
+   Expected JSON: `{"service":"relay","role":"api","phase":7,"database":"connected"}`. The phase value identifies the implemented feature scope; it is not a deployment or readiness certificate. This connectivity route queries PostgreSQL on every call and fails if it cannot connect. Flyway must succeed before the API starts. Minimal probes are `GET /actuator/health/liveness` and `GET /actuator/health/readiness`; readiness includes database health, while liveness does not. Metrics are disabled by default and require a separate operator credential; follow [operator setup and metric definitions](docs/OBSERVABILITY.md).
 
 Stop application terminals with Ctrl+C, then `docker compose down`. The named PostgreSQL volume retains data. Changing a password in `.env` after the database has been initialized does not change the stored database password; update the role in PostgreSQL when needed. Never edit an already-applied migration; add `V8__...sql` for the next schema change.
 
@@ -114,7 +114,9 @@ $env:TEST_DB_PASSWORD = 'your-test-password'
 .\mvnw.cmd verify
 ```
 
-The test role must own the database and be allowed to create tables. This path uses the same tests and migrations, with no in-memory substitute. Tests insert and remove their own fixtures; never point them at a shared or production database. Remove the `TEST_DB_*` variables to return to Testcontainers. Frontend validation is `npm ci` followed by `npm run build` in `frontend`. Phase 6 also adds real-browser tests against the packaged API and worker; see [browser-test setup](docs/DASHBOARD.md#browser-tests).
+The test role must own the database and be allowed to create tables. This path uses the same tests and migrations, with no in-memory substitute. Tests insert and remove their own fixtures; never point them at a shared or production database. Remove the `TEST_DB_*` variables to return to Testcontainers. Frontend validation is `npm ci` followed by `npm run build` in `frontend`. Real-browser tests cover the packaged API/worker and built dashboard; see [browser-test setup](docs/DASHBOARD.md#browser-tests). Node checks are `npm run test:bench`, `npm run test:failures` and `npm run test:startup`.
+
+On a Linux Docker host, `npm run verify:startup` from `frontend` executes the [disposable Compose/development walkthrough](docs/STARTUP_VERIFICATION.md), including retained data and signing-key decryption after restart. It creates and deletes only its uniquely scoped test volume. The ordinary manual `relay` volume and root `.env` are not used. The verifier refuses unsupported platforms before creating files/services; Docker/WSL remain unavailable in the local Windows environment. [Public deployment guidance](docs/DEPLOYMENT.md) uses a static HTTPS frontend and separate API/worker services; Vite dev/preview remain local tools.
 
 ## Repository guide
 
@@ -130,6 +132,8 @@ The test role must own the database and be allowed to create tables. This path u
 - [Continuous integration](docs/CI.md): pinned GitHub Actions, full backend/browser checks, output privacy and first hosted-run verification.
 - [Load measurements](docs/LOAD_TESTING.md): reproducible healthy workload, guarded database setup, timing definitions and measured results.
 - [Failure demonstrations](docs/FAILURE_DEMONSTRATIONS.md): destination recovery, forced worker termination, natural lease recovery and receiver deduplication limits.
+- [Startup verification](docs/STARTUP_VERIFICATION.md): actual Compose initialization, development proxy, sample receiver, retained restart and cleanup boundaries.
+- [Deployment reference](docs/DEPLOYMENT.md): single-host HTTPS, service/secret configuration, upgrades, backups and restoration limits.
 - [Retries and manual replay](docs/RETRIES.md): retryable outcomes, budgets, timing, replay routes and race handling.
 - [Delivery security and limits](docs/DELIVERY_SECURITY.md): signing/verification, secret setup, the sample receiver, response capture and workspace capacity.
 - [Dashboard](docs/DASHBOARD.md): customer workflows, browser state, local preview and end-to-end verification.
