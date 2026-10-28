@@ -15,7 +15,9 @@
     "test:bench": "node --check bench/run.mjs && node --test bench/*.test.mjs",
     "bench": "node bench/run.mjs",
     "test:failures": "node --check failure-demo/run.mjs && node --check failure-demo/runtime.mjs && node --test failure-demo/*.test.mjs",
-    "demo:failures": "node failure-demo/run.mjs"
+    "demo:failures": "node failure-demo/run.mjs",
+    "test:startup": "node --check startup/run.mjs && node --test startup/*.test.mjs",
+    "verify:startup": "node startup/run.mjs"
   },
   "dependencies": {
     "react": "19.3.1",

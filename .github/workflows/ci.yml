@@ -143,6 +143,10 @@ jobs:
         working-directory: frontend
         run: npm run test:failures
 
+      - name: Check startup isolation guards
+        working-directory: frontend
+        run: npm run test:startup
+
       - name: Install pinned Chromium and Linux libraries
         working-directory: frontend
         run: node node_modules/playwright/cli.js install --with-deps chromium
@@ -171,3 +175,8 @@ jobs:
           BENCH_DB_PASSWORD: relay-ci-disposable
           BENCH_DB_ALLOW_DESTRUCTIVE: 'true'
         run: npm run demo:failures
+
+      - name: Verify Compose startup and retained data
+        working-directory: frontend
+        timeout-minutes: 12
+        run: npm run verify:startup
